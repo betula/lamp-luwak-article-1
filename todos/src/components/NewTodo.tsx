@@ -13,7 +13,7 @@ export const NewTodo = () => {
     }
     const val = label.trim();
     if (val) {
-      todo.append(val);
+      todo.add(val);
       setLabel('');
     }
   };

@@ -1,13 +1,12 @@
-import React from "react";
-import { useProvide } from "lamp-luwak";
-import { Todo } from "../services/Todo";
-import { TodoItem } from "./TodoItem";
-import { TodoFilter } from "../services/TodoFilter";
-import { ToggleAllButton } from "./ToggleAllButton";
+import React from 'react';
+import { useProvide } from 'lamp-luwak';
+import { TodoItem } from './TodoItem';
+import { Todo, TodoFiltered } from '../services/Todo';
+import { ToggleAllButton } from './ToggleAllButton';
 
 export const TodoList = () => {
-  const [ todo, todoFilter ] = useProvide([ Todo, TodoFilter ]);
-  if (todo.isEmpty()) {
+  const [ todo, todoFiltered ] = useProvide([ Todo, TodoFiltered ]);
+  if (todo.store.list.length === 0) {
     return null;
   }
 
@@ -15,7 +14,7 @@ export const TodoList = () => {
     <section className="main">
       <ToggleAllButton />
       <ul className="todo-list">
-        {todoFilter.getCurrentList().map((item) => <TodoItem item={item} key={item.id} />)}
+        {todoFiltered.store.list.map((item) => <TodoItem item={item} key={item.store.id} />)}
       </ul>
     </section>
   )

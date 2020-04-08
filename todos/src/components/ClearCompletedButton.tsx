@@ -1,12 +1,11 @@
-import React, { memo } from "react";
-import { useProvide } from "lamp-luwak";
-import { Todo } from "../services/Todo";
-import { TodoFilter } from "../services/TodoFilter";
+import React, { memo } from 'react';
+import { useProvide } from 'lamp-luwak';
+import { Todo, TodoFiltered } from '../services/Todo';
 
 export const ClearCompletedButton = memo(() => {
-  const [ todo, todoFilter ] = useProvide([ Todo, TodoFilter ]);
+  const [ todo, todoFiltered ] = useProvide([ Todo, TodoFiltered ]);
 
-  if(!todoFilter.getCompletedCounter()) {
+  if(!todoFiltered.store.completed) {
     return null;
   }
 

@@ -1,18 +1,17 @@
-import React from "react";
-import { useProvide } from "lamp-luwak";
-import { Todo } from "../services/Todo";
-import { TodoFilter } from "../services/TodoFilter";
+import React from 'react';
+import { useProvide } from 'lamp-luwak';
+import { Todo, TodoFiltered } from '../services/Todo';
 
 export const ToggleAllButton = () => {
-  const [ todo, todoFilter ] = useProvide([ Todo, TodoFilter ]);
+  const [ todo, todoFiltered ] = useProvide([ Todo, TodoFiltered ]);
   return (
     <>
       <input
         id="toggle-all"
         className="toggle-all"
         type="checkbox"
-        checked={todoFilter.getActiveCounter() === 0}
-        onChange={() => todo.toggleAll()}
+        checked={todoFiltered.store.active === 0}
+        onChange={() => todo.toggle()}
       />
       <label htmlFor="toggle-all">Mark all as complete</label>
     </>

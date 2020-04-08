@@ -1,29 +1,27 @@
-import React, { memo } from "react";
-import { Link } from "react-router-dom";
-import { useProvide } from "lamp-luwak";
-import { Todo } from "../services/Todo";
-import { TodoFilter } from "../services/TodoFilter";
-import { ClearCompletedButton } from "./ClearCompletedButton";
+import React, { memo } from 'react';
+import { useProvide } from 'lamp-luwak';
+import { Todo, TodoFiltered } from '../services/Todo';
+import { ClearCompletedButton } from './ClearCompletedButton';
 
 export const Footer = memo(() => {
-  const [ todo, todoFilter ] = useProvide([ Todo, TodoFilter ]);
+  const [ todo, todoFiltered ] = useProvide([ Todo, TodoFiltered ]);
 
-  if (todo.isEmpty()) {
+  if (todo.store.list.length === 0) {
     return null;
   }
 
   return (
     <footer className="footer">
-      <span className="todo-count"><strong>{todoFilter.getActiveCounter()}</strong> item left</span>
+      <span className="todo-count"><strong>{todoFiltered.store.active}</strong> item left</span>
       <ul className="filters">
         <li>
-          <Link className={todoFilter.getFilter() === "all" ? "selected" : ""} to="/">All</Link>
+          <button className={todo.store.filter === 'all' ? 'selected' : ''}>All</button>
         </li>
         <li>
-          <Link className={todoFilter.getFilter() === "active" ? "selected" : ""} to="/active">Active</Link>
+          <button className={todo.store.filter === 'active' ? 'selected' : ''}>Active</button>
         </li>
         <li>
-          <Link className={todoFilter.getFilter() === "completed" ? "selected" : ""} to="/completed">Completed</Link>
+          <button className={todo.store.filter === 'completed' ? 'selected' : ''}>Completed</button>
         </li>
       </ul>
       <ClearCompletedButton />
