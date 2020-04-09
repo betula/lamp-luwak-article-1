@@ -1,4 +1,4 @@
-import { subscribe, modify, action } from 'lamp-luwak';
+import { subscribe, modify, action, dispatch } from 'lamp-luwak';
 
 type Store = {
   id: number,
@@ -7,6 +7,7 @@ type Store = {
 }
 
 export const TodoItemChanged = action();
+export const RemoveTodoItem = action();
 
 export class TodoItem {
   store: Store;
@@ -16,5 +17,8 @@ export class TodoItem {
   }
   toggle() {
     modify(this).completed = !this.store.completed;
+  }
+  remove() {
+    dispatch(RemoveTodoItem, this);
   }
 }
