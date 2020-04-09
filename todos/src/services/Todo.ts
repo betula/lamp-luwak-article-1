@@ -72,7 +72,6 @@ export class TodoFiltered {
     this.calculate();
   }
   calculate() {
-    console.log('calculated');
     const { list, filter } = this.todo.store;
     const active = list.filter(item => !item.store.completed);
     const completed = list.filter(item => item.store.completed);
@@ -89,6 +88,5 @@ export class TodoFiltered {
         store.list = list;
       }
     });
-    console.log(this.store);
   }
 }
