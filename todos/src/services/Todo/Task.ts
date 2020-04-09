@@ -6,19 +6,19 @@ type Store = {
   completed: boolean
 }
 
-export const TodoItemChanged = action();
-export const RemoveTodoItem = action();
+export const TaskChanged = action();
+export const RemoveTask = action();
 
-export class TodoItem {
+export class Task {
   store: Store;
   constructor(store: Store) {
     this.store = store;
-    subscribe(this, TodoItemChanged);
+    subscribe(this, TaskChanged);
   }
   toggle() {
     modify(this).completed = !this.store.completed;
   }
   remove() {
-    dispatch(RemoveTodoItem, this);
+    dispatch(RemoveTask, this);
   }
 }

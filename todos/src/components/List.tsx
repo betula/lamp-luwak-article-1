@@ -1,7 +1,7 @@
 import React from 'react';
 import { useProvide } from 'lamp-luwak';
 import { Todo } from '../services/Todo';
-import { Item } from './Item';
+import { Task } from './Task';
 
 export const List = () => {
   const todo = useProvide(Todo);
@@ -10,7 +10,7 @@ export const List = () => {
   return (
     <ul>
       {items.map(item => (
-        <Item item={item} key={item.store.id} />
+        <Task task={item} key={item.store.id} />
       ))}
     </ul>
   )

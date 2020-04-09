@@ -1,6 +1,6 @@
 import { provide, subscribe } from 'lamp-luwak';
 import { Todo } from './Todo';
-import { TodoItemChanged } from './Todo/TodoItem';
+import { TaskChanged } from './Todo/Task';
 
 export class TodoCounters {
   todo = provide(Todo);
@@ -10,7 +10,7 @@ export class TodoCounters {
   }
   constructor() {
     subscribe(this.todo, this.calculate, this);
-    subscribe(TodoItemChanged, this.calculate, this);
+    subscribe(TaskChanged, this.calculate, this);
     this.calculate();
   }
   calculate() {
