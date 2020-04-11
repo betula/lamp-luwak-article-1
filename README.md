@@ -42,7 +42,7 @@ yarn add lamp-luwak
 Сервис - это инстанция класса или функции-фабрики, представленная в единственном экземпляре, создаваемая при первом обращении и остающаяся до конца работы приложения.
 Описывается ли сервис с помощью класса или функции-фабрики, внутри себя он имеет свойство `store`.
 
-```typescript
+```javascript
 class Todos {
   store = [ /*...*/ ];
   // ...
@@ -51,7 +51,7 @@ class Todos {
 При описании свойства `store` необходимо указать значение стора по умолчанию. Так же из этого значения будет автоматически выводиться тип стора для типизированных диалектов.
 Далее сервис доступен либо из любого другого сервиса
 
-```typescript
+```javascript
 class TodoCounters {
   todo = provide(Todo);
   // ...
@@ -60,7 +60,7 @@ class TodoCounters {
 Здесь функция `provide` возвращает инстанцию сервиса, принимая в качестве аргумента класс сервиса, в данном примере `Todo`.
 Либо из любого React компонента
 
-```typescript
+```javascript
 const List = () => {
   const todo = useProvide(Todo);
   // ...
@@ -102,7 +102,7 @@ srс/
 
 Для того чтобы создать экземпляр класса `Task`, со стором и возможностью быть источником уведомлений об изменении стора, необходимо использовать функцию `create`, принимающую первым аргументом класс или функцию-фабрику, а последующие аргументы будут проброшены в конструктор класса или в аргументы функции-фабрики соответственно.
 
-```typescript
+```javascript
 // Todo.ts
 import { create } from 'lamp-luwak';
 import { Task } from './Todo/Task';
@@ -122,7 +122,7 @@ export class Todo {
 
 Создаём сервис `Todo`. В `store` по умолчанию положим два экземпляра задачи `Task`, создав их через функцию `create`. И добавляем метод `add`, который пересоздаёт стор, добавляя в него новый экземпляр задачи `Task`. В качестве уникального `id`, использовано значение вызова `Date.now`.
 
-```typescript
+```javascript
 // Todo/Task.ts
 import { subscribe, modify, action } from 'lamp-luwak';
 
@@ -154,7 +154,7 @@ export class Task {
 
 В коде выше, мы подписываем экшен на обновление стора, таким образом `TaskChanged` становится источником уведомлений об изменении стора каждого экземпляра класса `Task`. Подписка происходит посредством вызова функции `subscribe`, первый аргумент - это источник уведомлений об изменении стора, т.е. текущий объект, а второй - функция обработчик, что будет вызвана каждый раз при каждом обновлении стора. В данном случае в качестве функции обработчика выступает экшен `TaskChanged`, мы тоже экспортируем его из файла.
 
-```typescript
+```javascript
 // TodoCounters.ts
 import { provide, subscribe } from 'lamp-luwak';
 import { Todo } from './Todo';
@@ -192,7 +192,7 @@ export class TodoCounters {
 
 `List` - отрисовывает список задач.
 
-```typescript
+```javascript
 // List.tsx
 import React from 'react';
 import { useProvide } from 'lamp-luwak';
@@ -217,7 +217,7 @@ export const List = () => {
 
 `Task` - отрисовывает конкретную задачу.
 
-```typescript
+```javascript
 // Task.tsx
 import React, { FC } from 'react';
 import { useSubscribe } from 'lamp-luwak';
@@ -248,7 +248,7 @@ export const Task: FC<{ task: TaskClass }> = ({ task }) => {
 
 `Counters` - отрисовывает счётчики активных и завершённых задач.
 
-```typescript
+```javascript
 // Counters.tsx
 import React from 'react';
 import { useProvide } from 'lamp-luwak';
@@ -271,7 +271,7 @@ export const Counters = () => {
 
 Для добавления новой задачи используется метод `add` сервиса `Todo`. Для хранения локального значения формы, до момента добавления задачи в список `Todo`, используется стандартный хук React `useState`.
 
-```typescript
+```javascript
 // Input.tsx
 import React, { useState } from 'react';
 import { useProvide } from 'lamp-luwak';
@@ -303,7 +303,7 @@ export const Input = () => {
 
 И тогда содержимое файла `App.tsx`, находящегося в папке `src` проекта, станет подключением набора написанных выше компонентов.
 
-```typescript
+```javascript
 // App.tsx
 import React from 'react';
 import { Input } from './components/Input';
