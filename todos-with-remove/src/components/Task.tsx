@@ -18,6 +18,7 @@ export const Task: FC<{ task: TaskClass }> = ({ task }) => {
       }}>
         {label}
       </span>
+      <button onClick={() => task.remove()}>del</button>
     </li>
   )
 };

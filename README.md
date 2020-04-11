@@ -83,7 +83,6 @@ const List = () => {
 ```
 srс/
   components/       // Директория с React компонентами
-    App.tsx         // Компонент приложения
     Counters.tsx    // Счетчики активных и выполненных задач
     Input.tsx       // Форма для добавления новой задачи
     Task.tsx        // Задача
@@ -93,7 +92,7 @@ srс/
       Task.ts       // Задача
     Todo.ts         // Сервис списка задач
     TodoCounters.ts // Сервис счетчиков активных и выполненных задач
-  index.tsx
+  App.tsx           // Компонент приложения
 ```
 
 ### Сервисы
@@ -107,7 +106,7 @@ srс/
 Для того, что бы создать экземпляр класса `Task` со стором и возможностью быть источником уведомлений об изменении стора, необходимо использовать функцию `create`, принимающую первым аргументом класс или функцию-фабрику, а последующие аргументы будут проброшены в конструктор класса или в аргументы функции-фабрики соответственно.
 
 ```typescript
-// ./Todo.ts
+// Todo.ts
 import { create } from 'lamp-luwak';
 import { Task } from './Todo/Task';
 
@@ -127,7 +126,7 @@ export class Todo {
 Создаём сервис `Todo`. В `store` по умолчанию положим два экземпляра задачи `Task`, создав их через функцию `create`. И добавляем метод `add`, который пересоздаёт стор, добавляя в него новый экземпляр задачи `Task`. В качестве уникального `id`, использовано значение вызова `Date.now`.
 
 ```typescript
-// ./Todo/Task.ts
+// Todo/Task.ts
 import { subscribe, modify, action } from 'lamp-luwak';
 
 type Store = {
@@ -159,7 +158,7 @@ export class Task {
 В коде выше, мы подписываем экшен на обновление стора, таким образом `TaskChanged` становится источником уведомлений об изменении стора каждого экземпляра класса `Task`. Подписка происходит посредством вызова функции `subscribe`, первый аргумент это источник уведомлений об изменении стора, т.е. текущий объект, а второй функция обработчик, что будет вызвана каждый раз при каждом обновлении стора. В данном случае в качестве функции обработчика выступает акшэн `TaskChanged`, мы тоже экспортируем его из файла.
 
 ```typescript
-// ./TodoCounters.ts
+// TodoCounters.ts
 import { provide, subscribe } from 'lamp-luwak';
 import { Todo } from './Todo';
 import { TaskChanged } from './Todo/Task';
@@ -184,17 +183,135 @@ export class TodoCounters {
 }
 ```
 
-Здесь мы создаём сервис `TodoCounters`, что является аггрегатором. Он подписан на уведомления от 2-х источников:
+Здесь мы создаём сервис `TodoCounters`, что является агрегатором. Он подписан на уведомления от 2-х источников:
 - Сервис `Todo`, в его сторе храниться список задач и потому при добавлении или удалении задачи, с сервиса будет приходить уведомление.
--
+- Экшен `TaskChanged` является источником уведомлений, что происходят при каждом изменении стора какого-либо из экземпляров `Task`, а это возможно только при изменении значения поля `completed`, так как остальные поля в нашем интерфейсе остаются неизменными на протяжении всего времени работы приложения.
 
-При каждом изменении стора какого-либо из экземпляров `Task`, а в рамках данной задачи это возможно только при изменении значения поля `completed`, так как остальные поля в нашем интерфейсе остаются неизменными на протяжении всего времени работы приложения.
+При каждом уведомлении происходит пересчёт счетчиков активных и завершённых задач в методе `calculate`.
 
+### Отображение
 
+```typescript
+// Task.tsx
+import React, { FC } from 'react';
+import { useSubscribe } from 'lamp-luwak';
+import { Task as TaskClass } from '../services/Todo/Task';
 
+export const Task: FC<{ task: TaskClass }> = ({ task }) => {
+  useSubscribe(task);
+  const { label, completed } = task.store;
+  return (
+    <li>
+      <input
+          className="toggle"
+          type="checkbox"
+          checked={completed}
+          onChange={() => task.toggle()}
+        />
+      <span style={{
+        textDecoration: completed ? 'line-through' : 'none'
+      }}>
+        {label}
+      </span>
+    </li>
+  )
+};
+```
 
-И предлагаю самостоятельно сделать удаление задачи из списка.
+```typescript
+// List.tsx
+import React from 'react';
+import { useProvide } from 'lamp-luwak';
+import { Todo } from '../services/Todo';
+import { Task } from './Task';
 
+export const List = () => {
+  const todo = useProvide(Todo);
+  const items = todo.store;
+  if (items.length === 0) return null;
+  return (
+    <ul>
+      {items.map(item => (
+        <Task task={item} key={item.store.id} />
+      ))}
+    </ul>
+  )
+};
+```
+
+```typescript
+// Input.tsx
+import React, { useState } from 'react';
+import { useProvide } from 'lamp-luwak';
+import { Todo } from '../services/Todo';
+
+export const Input = () => {
+  const [text, setText] = useState('Cook the lunch');
+  const todo = useProvide(Todo);
+  const add = () => {
+    todo.add(text);
+    setText('');
+  };
+
+  return (
+    <>
+      <input
+        onChange={(e) => setText(e.target.value)}
+        value={text}
+        autoFocus
+        onKeyDown={(event: any) => {
+          if (event.keyCode === 13) add();
+        }}
+      />
+      <button onClick={add}>Add</button>
+    </>
+  );
+};
+```
+
+```typescript
+// Counters.tsx
+import React from 'react';
+import { useProvide } from 'lamp-luwak';
+import { TodoCounters } from '../services/TodoCounters';
+
+export const Counters = () => {
+  const { active, completed } = useProvide(TodoCounters).store;
+  return (
+    <>
+      <div>Active: {active}</div>
+      <div>Completed: {completed}</div>
+    </>
+  )
+};
+```
+
+```typescript
+// App.tsx
+import React from 'react';
+import { Input } from './components/Input';
+import { List } from './components/List';
+import { Counters } from './components/Counters';
+
+const App = () => (
+  <>
+    <Input />
+    <List />
+    <Counters />
+  </>
+);
+
+export default App;
+```
+
+### Домашнее задание
+
+И, кому понравилось, приглашаю самостоятельно сделать удаление задачи из списка.
+
+- Этот пример на [Codesandbox](https://codesandbox.io/s/github/betula/lamp-luwak-article-1/tree/master/todos), [Github](https://github.com/betula/lamp-luwak-article-1/tree/master/todos);
+- С удалением задачи на [Codesandbox](https://codesandbox.io/s/github/betula/lamp-luwak-article-1/tree/master/todos-with-remove), [Github](https://github.com/betula/lamp-luwak-article-1/tree/master/todos-with-remove).
+
+### В заключение
 
 
 
