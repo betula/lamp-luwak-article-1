@@ -4,7 +4,7 @@
 
 В данной статье мы рассмотрим подход основанный на сервисах-сторах, реализуемый благодаря библиотеке `lamp-luwak`.
 
-![lamp-luwak image](./image.png)
+![lamp-luwak image]([./image.png](https://betula.github.io/lamp-luwak-article-1/image.png))
 
 **TL;DR** Кто хочет скорее приступить к написанию кода может перейти к следующему параграфу.
 
@@ -194,7 +194,7 @@ export class TodoCounters {
 
 Графическая иллюстрация текущей структуры приложения:
 
-![service architecture image](./image-2.png)
+![service architecture image]([./image-2.png](https://betula.github.io/lamp-luwak-article-1/image-2.png))
 
 ### Отображение
 
