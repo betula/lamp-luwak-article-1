@@ -1,0 +1,17 @@
+{
+  "name": "lamp-luwak-article-1",
+  "description": "The Russian article about Lamp Luwak",
+  "license": "MIT",
+  "keywords": [
+    "javascript",
+    "state management",
+    "react",
+    "архитектура",
+    "typescript",
+    "lamp-luwak"
+  ],
+  "repository": {
+    "url": "https://github.com/betula/lamp-luwak-article-1"
+  },
+  "author": "Viacheslav Bereza <mail@betula.co> (http://betula.co)"
+}
